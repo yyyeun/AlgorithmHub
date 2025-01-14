@@ -30,3 +30,7 @@ def solution(participant, completion):
         hash_sum -= hash(c)
 
     return hash_dict[hash_sum]
+
+# 시간 복잡도
+# 기존 풀이 (정렬) -> O(NlogN)
+# 해시맵 사용 -> O(N+M)
