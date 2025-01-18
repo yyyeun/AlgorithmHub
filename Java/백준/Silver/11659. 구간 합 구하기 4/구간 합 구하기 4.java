@@ -1,30 +1,29 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = sc.nextInt();
-        int M = sc.nextInt();
-        int A[] = new int[N+1];
-        int S[] = new int[N+1];
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        A[0] = 0;
-        S[0] = 0;
+        long[] S = new long[N+1];
+        st = new StringTokenizer(br.readLine());
+
         for(int i = 1; i <= N; i++) {
-            A[i] = sc.nextInt();
-            if (i >= 2) {
-                S[i] = S[i-1] + A[i];
-            }
-            else S[i] = A[i];
+            S[i] = S[i-1] + Integer.parseInt(st.nextToken());
         }
 
         for(int i = 0; i < M; i++) {
-            int I = sc.nextInt();
-            int J = sc.nextInt();
+            st = new StringTokenizer(br.readLine());
+            int I = Integer.parseInt(st.nextToken());
+            int J = Integer.parseInt(st.nextToken());
 
             System.out.println(S[J] - S[I-1]);
         }
-
     }
 }
