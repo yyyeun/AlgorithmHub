@@ -3,4 +3,4 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 <br>
 
 ### solved.ac
-[![Solved.ac Profile](http://mazassumnida.wtf/api/generate_badge?boj=gjdpdms)](https://solved.ac/gjdpdms)
+[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=gjdpdms)](https://solved.ac/gjdpdms)​
