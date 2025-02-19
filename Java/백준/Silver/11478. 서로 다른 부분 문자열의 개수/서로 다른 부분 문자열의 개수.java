@@ -3,18 +3,17 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine();
-        
-    	HashSet<String> S = new HashSet<>();
-        for(int i=0; i<str.length(); i++) {
-    		for(int j=i+1; j<=str.length(); j++) {
-    			String temp = str.substring(i, j);
-    			if(!S.contains(temp))
-    				S.add(temp);	
-    		}
-    	}
-    	System.out.println(S.size());
+
+        Set<String> set = new HashSet<>();
+
+        for (int i=0; i<str.length(); i++) {
+            for (int j=i; j<str.length(); j++) {
+                set.add(str.substring(i, j+1)); // 중복 값을 추가해도 무시됨
+            }
+        }
+
+        System.out.println(set.size());
     }
 }
- 
