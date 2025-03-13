@@ -1,81 +1,71 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.StringTokenizer;
- 
+import java.util.*;
+import java.io.*;
+
+// n + 1 개의 집합으로 구성됨 (0 ~ n)
+// m 개의 연산에서
+// 0으로 시작: 합집합 연산 - 대표 노드 찾아 연결 (union + find)
+// 1로 시작: 같은 집합인지 확인
+
 public class Main {
-    static int[] parent;
- 
-    public static void main(String[] args) throws NumberFormatException, IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
- 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
- 
-        parent = new int[N + 1];
-        for (int i = 1; i <= N; i++) {
-            parent[i] = i;
-        }
- 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int command = Integer.parseInt(st.nextToken());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
- 
-            if (command == 0) {
-                union(a, b);
-            } else if (command == 1) {
-                sb.append((isSameParent(a, b) ? "YES" : "NO") + "\n");
-            } else {
-                continue;
-            }
-        }
- 
-        bw.write(sb.toString());
-        bw.flush();
-        bw.close();
-        br.close();
-    }
- 
-    // x의 부모를 찾는 연산
-    public static int find(int x) {
-        if (x == parent[x]) {
-            return x;
-        }
- 
-        return parent[x] = find(parent[x]);
-    }
- 
-    // y의 부모를 x의 부모로 치환하는 연산 (x > y 일 경우, 반대)
-    public static void union(int x, int y) {
-        x = find(x);
-        y = find(y);
- 
-        if (x != y) {
-            if (x < y) {
-                parent[y] = x;
-            } else {
-                parent[x] = y;
-            }
+
+    static int[] arr;
+
+    private static void execUnion(int a, int b) {
+        // 대표 노드 찾아 연결
+        a = verifyFind(a);
+        b = verifyFind(b);
+        if (a != b) {
+            arr[b] = a; // 두 노드 연결
         }
     }
- 
-    // x와 y의 부모가 같은지 확인
-    public static boolean isSameParent(int x, int y) {
-        x = find(x);
-        y = find(y);
- 
-        if (x == y) {
-            return true;
+
+    private static int verifyFind(int a) {
+        if (a == arr[a]) return a;  // 대표 노드일 경우
+        else {
+            return arr[a] = verifyFind(arr[a]);
+            // value를 index로 바꿔서 찾아보기 (여기까지만 하면 시간 초과)
+            // 재귀함수 빠져나올 때마다 그 때의 대표 노드로 업데이트
         }
- 
+    }
+
+    private static boolean checkSame(int a, int b) {
+        a = verifyFind(a);
+        b = verifyFind(b);
+        if (a == b) return true;
         return false;
     }
- 
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        arr = new int[n+1];
+
+        for (int i=0; i<=n; i++) {
+            arr[i] = i;
+        }
+
+        for (int i=0; i<m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int uf = Integer.parseInt(st.nextToken());
+            int tmp_a = Integer.parseInt(st.nextToken());
+            int tmp_b = Integer.parseInt(st.nextToken());
+
+            int a = Math.min(tmp_a, tmp_b);
+            int b = Math.max(tmp_a, tmp_b);
+
+            if (uf == 1) {
+                boolean result = checkSame(a, b);
+                if (result) {
+                    System.out.println("YES");
+                } else System.out.println("NO");
+            } else {
+                execUnion(a, b);
+            }
+        }
+    }
+
 }
