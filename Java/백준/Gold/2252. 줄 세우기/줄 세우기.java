@@ -1,78 +1,61 @@
+import java.util.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+
+// 학생들을 노드로, 키 순서 비교 데이터를 에지로 생각 -> 노드의 순서를 도출하는 문제 => 위상 정렬
+// "답이 여러 가지일 경우에는 아무거나 출력한다" => 위상 정렬의 특징
+
+// 그래프 및 진입 차수 배열 표현
+// 조건: "A가 B의 앞에 서야 한다"
+// 입력: 4 2 / 3 1
+// 그래프: 4 -> 2 / 3 -> 1
+// 진입 차수 배열: idx | 1 2 3 4
+//              val | 1 1 0 0
 
 public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int M = sc.nextInt();
 
-    // 백준온라인저지 2252번 줄 세우기 Java풀이
-    public static void main(String[] args) throws IOException {
-
-        // 입출력에 사용할 객체
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        // 주어진 정보 받기
-        String[] info = br.readLine().split(" ");
-
-        // 학생의 수
-        int N = Integer.parseInt(info[0]);
-        // 학생의 키 비교한 횟수
-        int M = Integer.parseInt(info[1]);
-
-        // 위상정렬에 사용할 진입차수 저장 배열
-        int[] edgeCount =new int[N + 1];
-        // 위상정렬에 사용할 그래프 2차원 리스트로 구현
-        ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();
-        for (int i = 0; i <= N+1; i++) {
-            graph.add(new ArrayList<Integer>());
+        // 인접 리스트 초기화
+        ArrayList<ArrayList<Integer>> A = new ArrayList<>();
+        for (int i=0; i<=N; i++) {
+            A.add(new ArrayList<>());
         }
 
-        // 2차원 리스트의 인덱스가 학생번호
-        // 주어진 키 비교정보에 따라 2차원 리스트 정보 초기화
-        // 리스트 초기화 하면서 진입차수배열 값 초기화
-        for (int i = 0; i < M; i++) {
-            String[] temp = br.readLine().split(" ");
-            graph.get(Integer.parseInt(temp[0])).add(Integer.parseInt(temp[1]));
-            edgeCount[Integer.parseInt(temp[1])]++;
+        // 진입 차수 배열 초기화
+        int indegree[] = new int[N+1];
+
+        // 인접 리스트, 진입 차수 배열 데이터 저장
+        for (int i=0; i<M; i++) {
+            int S = sc.nextInt();
+            int E = sc.nextInt();
+            A.get(S).add(E);  // 4 -> 2
+            indegree[E]++;    // indegree[2]++
         }
 
-        // 위상정렬에 사용할 큐
-        Queue<Integer> q = new LinkedList<>();
+        // --- 위상 정렬 수행 ---
+        // 큐 생성
+        Queue<Integer> queue = new LinkedList<>();
 
-        // 진입차수가 0인 값 큐에 넣기
-        for (int i = 1; i < edgeCount.length; i++) {
-            if (edgeCount[i] == 0) {
-                q.offer(i);
+        // 진입 차수가 0인 노드를 큐에 offer
+        for (int i=1; i<=N; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
             }
         }
 
         // 큐가 빌 때까지 반복
-        while (!q.isEmpty()) {
-            // 큐에서 학생번호 꺼내기
-            int studentNo = q.poll();
+        while (!queue.isEmpty()) {
+            int now = queue.poll();  // 큐에서 poll
+            System.out.print(now + " ");
 
-            // 꺼낸 학생번호 출력값에 저장
-            bw.write(String.valueOf(studentNo) + " ");
-
-            // 꺼낸 학생번호의 키 비교한 정보 가져오기
-            List<Integer> list = graph.get(studentNo);
-
-            // 키를 비교한 정보의 개수 만큼 반복문 실행
-            for (int i = 0; i < list.size(); i++) {
-                // 해당 학생보다 뒤에 서야하는 학생의 정보 가져오기
-                int temp = list.get(i);
-                // 뒤에 서야하는 학생의 진입차수 감소
-                edgeCount[temp] -- ;
-                // 감소한 진입차수가 0이면 큐에 학생번호 넣기
-                if (edgeCount[temp] == 0) {
-                    q.offer(temp);
+            for (int next : A.get(now)) {  // 현재 노드와 연결된 노드만큼
+                indegree[next]--;          // 연결된 노드의 진입 차수를 1씩 감소
+                if (indegree[next] == 0) {
+                    queue.offer(next);     // 진입 차수가 0인 노드를 큐에 offer
                 }
             }
         }
-
-        // 출력
-        bw.flush();
     }
 }
