@@ -3,8 +3,7 @@ import java.util.*;
 class Solution {
     public boolean solution(String[] phone_book) {
         boolean answer = true;
-        
-        Set phone_set = new HashSet<String>();
+        Set<String> phone_set = new HashSet<>();
         
         for (String p : phone_book) {
             phone_set.add(p);
